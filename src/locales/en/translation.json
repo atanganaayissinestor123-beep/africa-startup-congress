@@ -1,0 +1,628 @@
+{
+  "nav": {
+    "home": "Home",
+    "about": "About",
+    "speakers": "Speakers",
+    "program": "Program",
+    "register": "Register"
+  },
+  "home": {
+    "seo": {
+      "title": "Powering African Innovation",
+      "description": "Join 2,000+ founders, investors and policymakers at the Africa Startup Congress 2027 in Kigali, Rwanda. Accelerating job creation and innovation across the continent."
+    },
+    "hero": {
+      "tagline": "Africa Startup Congress 2027",
+      "heading_line1": "Empowering Innovators,",
+      "heading_line2": "Accelerating Job Creation in Africa",
+      "date": "February 24 - 26, 2027,",
+      "venue": "Kigali Convention Center"
+    },
+    "about": {
+      "description": "A marketplace for startups, governments, development stakeholders and investors, bringing together 2,000 participants from Africa and beyond."
+    },
+    "stats": {
+      "speakers": "Speakers",
+      "delegates": "Delegates",
+      "panels": " Panels / Masterclasses ",
+      "exhibitors": "Exhibitors",
+      "values": {
+        "speakers": "100+",
+        "delegates": "2000+",
+        "panels": "30+",
+        "exhibitors": "300+"
+      }
+    },
+    "keyActivities": {
+      "heading": "Key Activities",
+      "subheading": "Key Activities of the African Startup Congress",
+      "items": {
+        "pitch": {
+          "title": "National & Continental Startup Pitch Competition",
+          "description": "The national pitch competition will run from February to November 2026 (we will select the best startup from each country to compete in the continental pitch at ASC27 in Kigali. (Top startups in tech, energy, agribusiness, creative industries, etc.)"
+        },
+        "keynote": {
+          "title": "Keynote addresses from senior government officials, industry experts and development stakeholders",
+          "description": "ASC will feature keynote addresses from senior government officials, industry captains, investors and more, designed to inspire and set direction. These addresses are tailored to an Africa-focused agenda: Vision & Inspiration, The Future of Entrepreneurship in Africa, Policy & Ecosystem, Investment & Growth, Innovation & Technology"
+        },
+        "panel": {
+          "title": "High-level thematic panel sessions",
+          "description": "Featuring key industry experts, ASC's high-level thematic panel sessions are designed to attract founders, investors, policymakers and ecosystem players. They are strategically framed, forward-looking and tailored to the context of the African startup ecosystem."
+        },
+        "masterclass": {
+          "title": "Masterclasses with top ecosystem players and industry captains.",
+          "description": "The ASC Masterclass is designed to deliver hands-on, high-impact learning for entrepreneurs, policymakers and ecosystem leaders. Led by seasoned experts, investors and business leaders, these sessions go beyond theory to deliver practical insights, real-world case studies and actionable strategies. Participants will deepen their knowledge in areas such as investment readiness, business development, innovation management and policy development, equipping them with the tools needed to build sustainable, competitive businesses. The sessions ensure participants don't just network — they learn, apply and grow."
+        },
+        "gala": {
+          "title": "African Creative & Cultural Gala & Awards Ceremony",
+          "description": "The African Creative and Cultural Gala & Awards Ceremony is a premier celebration of Africa's rich cultural heritage and vibrant creative industries. The gala brings together artists, designers, filmmakers, musicians, cultural entrepreneurs, policymakers and investors to showcase African creativity, promote cultural exchange and unlock economic opportunities within the creative economy."
+        },
+        "exhibition": {
+          "title": "Made in Africa (MiA) Product Exhibitions and Sales",
+          "description": "The Made in Africa Exhibition and Sale is a marketplace designed to showcase, promote and market products and innovations made in Africa. The exhibition brings together entrepreneurs, artisans, startups, manufacturers and investors to celebrate African creativity, quality and entrepreneurship while creating direct market access."
+        }
+      }
+    },
+    "schedule": {
+      "heading": "Event Program",
+      "description": "A comprehensive roadmap for three days of intensive learning, pitching and networking.",
+      "viewMore": "VIEW MORE",
+      "fullSchedule": "FULL SCHEDULE",
+      "days": {
+        "day1": {
+          "time": "FEB 24, 2027",
+          "event": "Official opening and high-level thematic panel"
+        },
+        "day2": {
+          "time": "FEB 25, 2027",
+          "event": "Breakout sessions and masterclasses"
+        },
+        "day3": {
+          "time": "FEB 26, 2027",
+          "event": "High-level thematic panel, continental pitch competition and closing ceremony"
+        }
+      }
+    },
+    "venue": {
+      "heading_line1": "Kigali Convention",
+      "heading_line2": "Center",
+      "description": "A world-class venue at the heart of Africa. The region's most advanced meeting infrastructure, hosting the brightest minds.",
+      "cta": "DISCOVER"
+    },
+    "register": {
+      "heading_line1": "Join Us at the Africa Startup Congress",
+      "heading_line2": "and Explore Outstanding Opportunities",
+      "packages": {
+        "delegate": {
+          "tag": "Registration",
+          "title": "For Delegates",
+          "description": "Be part of the Africa Startup Congress — where visionary founders, investors, development stakeholders, policymakers and ecosystem players come together to shape the African startup landscape; Discover high-impact opportunities, Connect with top investors & innovators, Gain insights from industry leaders."
+        },
+        "exhibitor": {
+          "tag": "Registration",
+          "title": "Made in Africa Exhibition",
+          "description": "Showcase your brand at the heart of the African innovation ecosystem and connect directly with founders, investors, policymakers and industry leaders. Why exhibit? Gain high-impact visibility for your products and services, Meet qualified prospects and potential partners, Position your brand as a key player in the African startup space, Launch and demonstrate your solutions to a targeted audience. Join our Made in Africa marketplace and boost your sales."
+        },
+        "sponsor": {
+          "tag": "Registration",
+          "title": "Sponsorship & Partnership",
+          "description": "Associate your brand with Africa's leading innovation platform and play a key role in building the continent's entrepreneurial future. Why sponsor or partner: Gain premium visibility with a high-level audience, Connect with startup founders, industry captains, investors and policymakers, Strengthen your brand's impact within the African innovation ecosystem, Access strategic networking and partnership opportunities, Lead. Influence and Invest in Africa's future."
+        }
+      }
+    },
+    "partners": {
+      "heading": "Partners & ",
+      "headingHighlight": "Sponsors"
+    },
+    "newsletter": {
+      "heading": "Newsletter",
+      "subheading": "STAY UPDATED WITH THE LATEST ECOSYSTEM NEWS",
+      "placeholder": "Enter your email address",
+      "cta": "SUBSCRIBE"
+    }
+  },
+  "about": {
+    "seo": {
+      "title": "Our Vision for Africa",
+      "description": "Discover the origins, mission and vision of the Africa Startup Congress. We are committed to bridging the gap between African startups, global investors and policymakers."
+    },
+    "header": {
+      "tagline": "Africa Startup Congress 2027",
+      "heading_line1": "Our",
+      "heading_highlight1": "Vision.",
+      "heading_line2": "The",
+      "heading_highlight2": "Africa",
+      "heading_line3": "We Want."
+    },
+    "background": {
+      "heading_line1": "Background &",
+      "heading_highlight": "Rationale",
+      "rationale": {
+        "heading": "Rationale",
+        "text": "Africa's startup ecosystem is evolving rapidly, driven by a young population, growing digital adoption and an increasing appetite for innovative solutions to development challenges. Across the continent, startups are creating jobs, improving service delivery and contributing to inclusive economic growth. However, founders still face persistent obstacles such as limited access to funding, market fragmentation, regulatory constraints and insufficient links between innovators, policymakers and investors."
+      },
+      "about": {
+        "heading": "About Us",
+        "text": "The Africa Startup Congress (ASC) is designed as a continental gathering platform to bring together key ecosystem stakeholders to foster collaboration, knowledge sharing, investment mobilization and enabling policy development. The Congress will serve as a bridge between startups, investors, governments, businesses, development partners, academia and innovation hubs, accelerating Africa's transition toward a resilient, competitive and sustainable entrepreneurial economy."
+      }
+    },
+    "mission": {
+      "heading": "Our Mission",
+      "text": "To become Africa's leading platform that connects, empowers and accelerates startups, driving innovation, investment and sustainable economic growth across the continent. Turning startup founders into industry captains."
+    },
+    "vision": {
+      "heading": "Our Vision",
+      "text": "To envision an integrated ecosystem where entrepreneurs, investors, policymakers and enablers collaborate seamlessly to unlock Africa's full innovation potential and position the continent as a global hub for entrepreneurship."
+    },
+    "values": {
+      "heading": "Core Values",
+      "items": {
+        "inclusion": {
+          "title": "Inclusion",
+          "text": "Breaking down geographic barriers across the continent."
+        },
+        "innovation": {
+          "title": "Innovation",
+          "text": "Fostering a mindset for solving African challenges."
+        },
+        "collaboration": {
+          "title": "Collaboration",
+          "text": "Bridging the gap between startups, governments and investors."
+        },
+        "impact": {
+          "title": "Impact",
+          "text": "Driving job creation and inclusive economic growth."
+        }
+      }
+    },
+    "challenges": {
+      "heading_line1": "OVERVIEW & CHALLENGES OF",
+      "heading_highlight": "THE AFRICAN STARTUP ECOSYSTEM",
+      "description": "Africa's startup ecosystem is booming, with a growing number of innovative companies tackling local challenges and drawing global attention. Here is an overview of the ecosystem: African startups face significant investment challenges that hold back their growth and ability to scale. Key challenges include:",
+      "items": {
+        "venture_capital": {
+          "title": "Limited Access to Venture Capital",
+          "text": "Many startups struggle to secure funding, especially at early stages. Africa's venture capital market is still underdeveloped compared to other regions; Funding Gaps: a significant disparity exists between available capital and startups' funding needs. Local investors often have limited resources, and risk-averse investors further complicate the funding landscape."
+        },
+        "regulatory": {
+          "title": "Regulatory Challenges",
+          "text": "Complex regulations that are inconsistent from country to country create uncertainty and obstacles for startups. Regulatory fragmentation makes regional expansion difficult for startups."
+        },
+        "infrastructure": {
+          "title": "Infrastructure Gaps",
+          "text": "Poor internet connectivity, unreliable power supply and limited access to quality logistics hinder startup operations and user adoption."
+        },
+        "talent": {
+          "title": "Talent Shortages and Skills Gaps",
+          "text": "Many entrepreneurs lack access to the specialized skills needed to run tech startups, making it difficult to build and sustain successful businesses."
+        },
+        "investor": {
+          "title": "Investor Skepticism",
+          "text": "Investors are cautious due to concerns about the ability of African startups to generate sustainable returns and scale effectively."
+        },
+        "ecosystem": {
+          "title": "Disorganized Ecosystem",
+          "text": "The African ecosystem operates in complete disarray; a lack of coordination and collaboration among stakeholders and ecosystem players leads to duplicated efforts. Communication is weak, as information is not properly shared across the ecosystem. At ASC, we want to address this."
+        }
+      }
+    },
+    "whyDifferent": {
+      "heading_line1": "Why the Africa Startup Congress",
+      "heading_highlight": "Is Different.",
+      "items": {
+        "policy": {
+          "number": "01",
+          "title": "Policy Meets Entrepreneurship",
+          "text": "Unlike many startup-focused events, ASC is a marketplace for the continental ecosystem. It brings together founders, investors, financial institutions, development stakeholders and policymakers in one space. It actively shapes startup policies, regulations and frameworks such as: the Africa Startup Act (ASA) and the Africa Startup Innovation Fund (ASIF)."
+        },
+        "action": {
+          "number": "02",
+          "title": "Action-Oriented, Not Just Talk",
+          "text": "Most events focus on panels and speeches. The Africa Startup Congress emphasizes: closing deals, partnerships, working groups and task forces. Participants leave with real opportunities and concrete outcomes, not just ideas."
+        },
+        "panAfrican": {
+          "number": "03",
+          "title": "Pan-African Collaboration Platform",
+          "text": "It is designed as a continental platform, connecting ecosystems from different African countries. This encourages: cross-border investment, regional partnerships, business development in new markets."
+        },
+        "investors": {
+          "number": "04",
+          "title": "Connect with Investors and Unlock Growth",
+          "text": "At ASC, African startups meet capital, present their innovations and turn their ideas into funded businesses. ASC is your gateway to African and global investors."
+        }
+      }
+    },
+    "gallery": {
+      "heading_line1": "Event",
+      "heading_highlight": "Gallery",
+      "subheading": "Visual Highlights of Our Journey",
+      "pagination": {
+        "back": "BACK",
+        "next": "NEXT"
+      },
+      "images": {
+        "aab_camp": "AAB (Accelerate Africa Boot) camp",
+        "aas_summit": "AAS (Accelerate Africa Summit)",
+        "aas_summit_alt": "AAS Accelerate Africa Summit",
+        "aab_boot": "AAB Accelerate Africa Boot camp",
+        "networking": "Networking Session",
+        "pitch": "Startup Pitch Competition",
+        "panel": "High-Level Panel Discussion",
+        "masterclass": "Expert Masterclass",
+        "gala": "Cultural Gala Evening",
+        "exhibition": "Made in Africa Exhibition"
+      }
+    }
+  },
+  "program": {
+    "seo": {
+      "title": "Program & Event Schedule",
+      "description": "Explore the full 3-day program of the Africa Startup Congress 2027. From high-level panels on funding to continental pitch competitions and masterclasses."
+    },
+    "header": {
+      "heading_line1": "The",
+      "heading_highlight": "Program.",
+      "date": "Feb 24-26, 2027",
+      "venue": "Convention Center"
+    },
+    "sessionTypes": {
+      "presentation": "presentation",
+      "ceremony": "ceremony",
+      "panel": "panel",
+      "breakout": "breakout",
+      "masterclass": "masterclass",
+      "competition": "competition",
+      "roundtable": "roundtable",
+      "gala": "gala",
+      "tour": "tour",
+      "break": "break",
+      "social": "networking"
+    },
+    "speakerLabel": "Keynote Speaker",
+    "schedule": {
+      "day1": {
+        "day": "Day 01",
+        "date": "February 24, 2027",
+        "theme": "Official opening and high-level thematic panel",
+        "sessions": {
+          "contributions": {
+            "time": "09:00",
+            "title": "The Contributions of African Startups to Job Creation",
+            "description": "In-depth presentation with case studies from the 4 major tech hubs.",
+            "speaker": "Head of Research Team",
+            "type": "presentation"
+          },
+          "opening": {
+            "time": "10:00",
+            "title": "Official Opening Ceremony",
+            "description": "Welcome addresses from government leaders and industry captains.",
+            "speaker": "Ministers & Development Partners",
+            "type": "ceremony"
+          },
+          "tour": {
+            "time": "11:00",
+            "title": "Exhibition Village Tour",
+            "description": "Official tour of national pavilions and innovation booths.",
+            "speaker": "Official Guests",
+            "type": "tour"
+          },
+          "panel": {
+            "time": "14:00",
+            "title": "High-Level Panel: Funding and Investment",
+            "description": "Exploring funding challenges and the role of the AfDB and venture capitalists.",
+            "speaker": "Venture Capitalists & Fund Managers",
+            "type": "panel"
+          },
+          "cocktail": {
+            "time": "19:00",
+            "title": "Evening Networking Cocktail",
+            "description": "Exclusive networking session at the Sky Lounge.",
+            "speaker": "By Invitation Only",
+            "type": "social"
+          }
+        }
+      },
+      "day2": {
+        "day": "Day 02",
+        "date": "February 25, 2027",
+        "theme": "Breakout sessions and masterclasses",
+        "sessions": {
+          "masterclass": {
+            "time": "Morning",
+            "title": "Masterclasses & Breakout Sessions",
+            "description": "Parallel technical sessions on scaling and regulatory compliance.",
+            "speaker": "Industry Experts",
+            "type": "masterclass"
+          },
+          "roundtable": {
+            "time": "14:00",
+            "title": "Roundtable: Africa Startup Act",
+            "description": "Policy validation session with ecosystem stakeholders.",
+            "speaker": "Policymakers",
+            "type": "roundtable"
+          },
+          "pitch": {
+            "time": "15:30",
+            "title": "Continental Pitch Competition",
+            "description": "Finalists from across Africa compete for non-dilutive funding.",
+            "speaker": "Finalist Startups",
+            "type": "competition"
+          }
+        }
+      },
+      "day3": {
+        "day": "Day 03",
+        "date": "February 26, 2027",
+        "theme": "High-level thematic panel, continental pitch competition and closing ceremony",
+        "sessions": {
+          "ai": {
+            "time": "11:00",
+            "title": "AI, Technology and the Future of Africa",
+            "description": "How AI is reshaping agriculture, fintech and logistics.",
+            "speaker": "Tech Pioneers",
+            "type": "panel"
+          },
+          "closing": {
+            "time": "13:00",
+            "title": "Closing Ceremony & Kigali Declaration",
+            "description": "Official signing and presentation of the 2028 roadmap.",
+            "speaker": "Summit Chairs",
+            "type": "ceremony"
+          },
+          "gala": {
+            "time": "19:00",
+            "title": "Creative & Cultural Gala & Awards Ceremony",
+            "description": "A night of African excellence, culture and awards.",
+            "speaker": "All Attendees",
+            "type": "gala"
+          }
+        }
+      }
+    },
+    "tracks": {
+      "heading": "Event Tracks",
+      "items": {
+        "innovation": {
+          "title": "Innovation Hub",
+          "desc": "Deep dives into the disruptive technologies shaping Africa."
+        },
+        "policy": {
+          "title": "Policy & Fintech",
+          "desc": "Navigating regulatory landscapes and digital economy growth."
+        },
+        "investment": {
+          "title": "Investment Nexus",
+          "desc": "Bridging the gap between active founders and global capital."
+        }
+      }
+    },
+    "cta": {
+      "heading_line1": "DON'T MISS",
+      "heading_highlight": "THE STORY.",
+      "subheading": "Limited seats available for the 2027 Summit.",
+      "button": "Book Your Seat"
+    }
+  },
+  "speakers": {
+    "seo": {
+      "title": "Featured Speakers",
+      "description": "Meet the visionaries, investors and policymakers speaking at the Africa Startup Congress 2027. Hear from the industry leaders shaping Africa's tech ecosystem."
+    },
+    "header": {
+      "tagline": "Africa Startup Congress 2027",
+      "heading_line1": "Meet",
+      "heading_highlight": "Our Speakers",
+      "subheading": "learn from Africa's top innovators and industry captains."
+    },
+    "empty": {
+      "heading": "No speakers announced yet.",
+      "subtext": "Check back soon."
+    },
+    "items": [
+      {
+        "name": "Sarah Nkosi",
+        "title": "CEO, TechAfrica",
+        "category": "Keynote Speaker",
+        "image": "/assets/images/10.jpeg"
+      },
+      {
+        "name": "David Mensah",
+        "title": "Senior Investor, Global VC",
+        "category": "Panelist",
+        "image": "/assets/images/11.jpeg"
+      },
+      {
+        "name": "Amina Diallo",
+        "title": "Founder, AgTech Solutions",
+        "category": "Speaker",
+        "image": "/assets/images/12.jpeg"
+      }
+    ],
+    "becomeASpeaker": {
+      "watermark": "YOUR STORY HERE",
+      "heading_line1": "Do You",
+      "heading_highlight": "Have the Expertise?",
+      "subheading": "WE ARE LOOKING FOR THOUGHT LEADERS TO SHAPE ASC 2027.",
+      "cta": "APPLY AS A SPEAKER"
+    },
+    "cta": {
+      "heading_line1": "Witness",
+      "heading_highlight": "Excellence.",
+      "subheading": "GET YOUR PASS TO ALL SESSIONS AND KEYNOTES.",
+      "button": "REGISTER NOW"
+    }
+  },
+  "register": {
+    "seo": {
+      "title": "Register as a Delegate",
+      "description": "Book your seat at the Africa Startup Congress 2027. Join founders, investors and policymakers to discuss the future of the African startup ecosystem."
+    },
+    "header": {
+      "heading_line1": "Register for",
+      "heading_highlight": "ASC 2027",
+      "subheading": "JOIN 2,000+ VISIONARIES AT AFRICA'S PREMIER STARTUP CONGRESS"
+    },
+    "success": {
+      "heading": "DONE!",
+      "subheading": "APPLICATION SUBMITTED SUCCESSFULLY",
+      "body": "Thank you for choosing to be part of ASC 2027. \nCheck your email for further instructions.",
+      "backHome": "BACK TO HOME",
+      "footnote": "Join the movement transforming Africa"
+    },
+    "form": {
+      "fullName": {
+        "label": "Full Name",
+        "placeholder": "John Doe",
+        "required": true
+      },
+      "fee": {
+        "label": "Registration Fee"
+      },
+      "email": {
+        "label": "Email Address",
+        "placeholder": "john@example.com",
+        "required": true
+      },
+      "phone": {
+        "label": "Phone Number",
+        "placeholder": "+250 788 000 000",
+        "required": true,
+        "helpText": "Include your country's dial code."
+      },
+      "paymentMethod": {
+        "label": "Payment Method",
+        "options": {
+          "momo": "Mobile Money",
+          "cc": "Credit / Debit Card"
+        }
+      },
+      "momoError": "Mobile Money (MoMo) is reserved for residents of Rwanda. Please select Credit Card.",
+      "momoNotice": "Note: Mobile Money (MoMo) payments are strictly reserved for residents of Rwanda.",
+      "internationalNotice": "International participants must use a Credit / Debit Card.",
+      "organization": {
+        "label": "Organization",
+        "placeholder": "Acme Ltd",
+        "required": true
+      },
+      "country": {
+        "label": "Country",
+        "placeholder": "Rwanda",
+        "required": true
+      },
+      "role": {
+        "label": "Participant Role",
+        "placeholder": "Select your role",
+        "required": true,
+        "options": {
+          "speaker": "Speaker",
+          "delegate": "Delegate",
+          "exhibitor": "Exhibitor",
+          "sponsor": "Sponsor",
+          "startup/SME/Individual": "Startup / SME / Individual",
+          "investor": "Investor",
+          "governmentOfficial": "Government Official",
+          "corporate/investor/Organization": "Corporate / Investor / Organization",
+          "developmentPartner": "Development Partner",
+          "ecosystemBuilder": "Ecosystem Builder",
+          "academicResearcher": "Academic/Researcher",
+          "media": "Media",
+          "other": "Other"
+        }
+      },
+      "fieldOfActivity": {
+        "label": "Field of Activity",
+        "placeholder": "e.g. Fintech, Artificial Intelligence, Sustainable Energy",
+        "required": true
+      },
+      "reason": {
+        "label": "Why do you want to attend?",
+        "placeholder": "Tell us what you hope to gain from ASC 2027...",
+        "required": true
+      },
+      "submitButton": "SUBMIT REGISTRATION",
+      "submittingButton": "SUBMITTING...",
+      "errorMessage": "Failed to submit registration. Please try again."
+    },
+    "sidebar": {
+      "objective": {
+        "heading": "Our Objective",
+        "text": "Making it easy for you to attend ASC 2027 by simplifying every step of registration."
+      },
+      "needToKnow": {
+        "heading": "Good to Know",
+        "items": {
+          "earlyBird": "Limited Early Bird seats available",
+          "vetted": "All applications are reviewed",
+          "confirmation": "Confirmation within 48 hours",
+          "access": "Access to all networking spaces"
+        }
+      },
+      "quote": {
+        "heading": "Be Bold.",
+        "text": "\"Africa's future is built by those who take the first step today.\""
+      }
+    }
+  },
+  "footer": {
+    "description": "Empowering founders, policymakers and investors to bridge the gap and accelerate job creation across the continent.",
+    "discoverHeading": "DISCOVER THE EVENT",
+    "links": {
+      "home": "Home",
+      "about": "About",
+      "schedule": "The Program",
+      "speakers": "Speakers",
+      "registration": "Registration"
+    },
+    "reachOutHeading": "REACH OUT",
+    "contact": {
+      "support": "Official Support Channel",
+      "hotline": "Delegation Assistance Hotline",
+      "location_r": "Kigali, Rwanda"
+    },
+    "bottom": {
+      "copy": "©️ {{year}} Africa Startup Congress. OPERATED BY ACCELERATE AFRICA.",
+      "privacy": "PRIVACY POLICY",
+      "terms": "TERMS OF USE",
+      "refund": "REFUND POLICY"
+    }
+  },
+  "nav_tooltips": {
+    "switch_fr": "Switch to French",
+    "switch_en": "Switch to English",
+    "fr": "FR",
+    "en": "EN",
+    "french": "Français",
+    "english": "English"
+  },
+  "paymentStatus": {
+    "seo": {
+      "title": "Payment Status | Congress",
+      "description": "Checking the status of your payment transaction."
+    },
+    "loading": {
+      "heading": "Checking...",
+      "message": "We are querying the payment gateway to confirm your transaction."
+    },
+    "pending": {
+      "heading": "Payment Pending",
+      "message": "Please confirm the transaction on your phone (Mobile Money) or complete payment on the secure page.",
+      "button": "Refresh Status"
+    },
+    "completed": {
+      "heading": "Payment Successful!",
+      "message": "Your registration has been successfully confirmed. A confirmation email has been sent to you.",
+      "reference": "Reference:",
+      "amount": "Amount:",
+      "button": "Back to Home"
+    },
+    "failed": {
+      "heading": "Payment Failed",
+      "defaultMessage": "The transaction could not be completed. Please try again.",
+      "button": "Try Again"
+    },
+    "errors": {
+      "noRef": "No payment reference was found in the URL.",
+      "network": "Error communicating with the payment server."
+    }
+  }
+}

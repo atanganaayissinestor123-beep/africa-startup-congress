@@ -1,0 +1,60 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  
+  body {
+    @apply antialiased font-['Roboto',_sans-serif] text-[#001F54];
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-['Roboto',_sans-serif];
+  }
+}
+
+/* Custom Utilities */
+@layer utilities {
+  .text-shadow-premium {
+    text-shadow: 0 4px 8px rgba(0, 31, 84, 0.2);
+  }
+
+  @keyframes scroll {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(-50%);
+    }
+  }
+
+  .animate-scroll {
+    animation: scroll 15s linear infinite;
+  }
+
+  .pause-on-hover:hover {
+    animation-play-state: paused;
+  }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-gray-100;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-[#001F54] rounded-full;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-[#003580];
+}
