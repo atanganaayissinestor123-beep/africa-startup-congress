@@ -10,6 +10,7 @@ import Admin from './pages/Admin';
 import NotFound from './pages/NotFound';
 import RegistrationsManager from './pages/RegistrationsManager'; 
 import PaymentStatus from './pages/PaymentStatus';
+import BadgePage from './pages/BadgePage';
 function App() {
   return (
     <Router>
@@ -26,6 +27,7 @@ function App() {
             <Route path="*" element={<NotFound />} />
             <Route path="/registrations" element={<RegistrationsManager />} />
             <Route path="/payment-status" element={<PaymentStatus />} />
+            <Route path="/badge/:token" element={<BadgePage />} />
           </Routes>
         </main>
         <Footer />

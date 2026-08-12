@@ -5,6 +5,7 @@
 // ici pour être partagée entre pesapal-payment et pesapal-ipn.
 // ============================================================
 import { PDFDocument, StandardFonts, rgb } from 'https://esm.sh/pdf-lib@1.17.1';
+import { generateQrPngBytes, getBadgeUrl } from './badge.ts';
 
 function uint8ToBase64(bytes: Uint8Array): string {
   let binary = '';
@@ -25,6 +26,7 @@ interface ReceiptData {
   paymentMethod: string | null;
   amountUsd: number | null;
   date: string;
+  qrToken: string | null;
 }
 
 async function generateReceiptPdf(data: ReceiptData): Promise<Uint8Array> {
@@ -78,6 +80,31 @@ async function generateReceiptPdf(data: ReceiptData): Promise<Uint8Array> {
     { x: 50, y, size: 9, font, color: gray, maxWidth: 495 }
   );
 
+  // ============================================================
+  // QR CODE — vérification anti-fraude. Scanné, il renvoie les vraies
+  // informations d'inscription depuis la base de données, à comparer
+  // avec ce qui est imprimé sur ce PDF (détecte un reçu falsifié).
+  // ============================================================
+  if (data.qrToken) {
+    try {
+      const qrBytes = await generateQrPngBytes(data.qrToken);
+      const qrImage = await pdfDoc.embedPng(qrBytes);
+      const qrSize = 110;
+      const qrX = 435;
+      const qrY = 60;
+
+      page.drawImage(qrImage, { x: qrX, y: qrY, width: qrSize, height: qrSize });
+      page.drawText('Verify online', {
+        x: qrX, y: qrY - 12, size: 8, font: boldFont, color: navy,
+      });
+      page.drawText('Scan to confirm authenticity', {
+        x: qrX, y: qrY - 22, size: 7, font, color: gray,
+      });
+    } catch (qrError) {
+      console.error(`[RECEIPT] Échec génération QR code pour ${data.registrationId} — reçu généré sans badge:`, qrError);
+    }
+  }
+
   return await pdfDoc.save();
 }
 
@@ -91,6 +118,7 @@ export async function sendConfirmationEmailViaResend(delegateData: {
   country?: string | null;
   paymentMethod?: string | null;
   date?: string | null;
+  qrToken?: string | null;
 }) {
   const resendApiKey = Deno.env.get('RESEND_API_KEY');
   const fromAddress = Deno.env.get('RESEND_FROM') || 'Africa Startup Congress <asc@africastartupcongress.org>';
@@ -99,6 +127,8 @@ export async function sendConfirmationEmailViaResend(delegateData: {
     console.error("RESEND_API_KEY manquant dans les secrets Supabase — envoi d'e-mail impossible.");
     return;
   }
+
+  const badgeUrl = delegateData.qrToken ? getBadgeUrl(delegateData.qrToken) : null;
 
   const subject = 'Africa Startup Congress #ASC27';
   const body = `
@@ -115,8 +145,7 @@ Delegate Category: ${delegateData.role}
 Amount Paid: USD ${delegateData.amountUsd}
 Payment Status: Confirmed
 
-Your official payment receipt is attached to this email as a PDF — please keep it for your records.
-
+Your official payment receipt is attached to this email as a PDF — please keep it for your records. It includes a QR code you can scan to verify your registration details online at any time${badgeUrl ? ` (${badgeUrl})` : ''}.
 Your registration is now complete, and your place at Africa's premier gathering of entrepreneurs, investors, innovators, policymakers, and ecosystem leaders has been secured.
 
 Few weeks to the congress you will receive:
@@ -150,6 +179,7 @@ Accelerating Innovation. Connecting Africa. Building the Future.
       paymentMethod: delegateData.paymentMethod ?? null,
       amountUsd: delegateData.amountUsd,
       date: delegateData.date || new Date().toISOString().slice(0, 10),
+      qrToken: delegateData.qrToken ?? null,
     });
     attachments = [{
       filename: `ASC27-Receipt-${delegateData.registrationId}.pdf`,
