@@ -1,41 +1,25 @@
 // ============================================================
-// Applique le résultat de GetTransactionStatus à une ligne `registrations`.
-// Partagé entre pesapal-payment (action=status, polling front) et
-// pesapal-ipn (notification push de Pesapal), pour ne jamais dupliquer
-// la logique "libérer la place Early Bird si échec / envoyer l'e-mail si
-// succès".
+// Applique le résultat d'un check de statut (Pesapal ou PawaPay) à une
+// ligne `registrations`. Partagé entre pesapal-payment/pesapal-ipn et
+// pawapay-payment/pawapay-ipn, pour ne jamais dupliquer la logique
+// "libérer la place Early Bird si échec / envoyer l'e-mail si succès".
 // ============================================================
 import { sendConfirmationEmailViaResend } from './notifications.ts';
 import { mapPesapalStatus } from './pesapal.ts';
+import { mapPawapayStatus } from './pawapay.ts';
 
-export async function applyTransactionStatus(
+// ------------------------------------------------------------
+// Cœur commun : une fois qu'on connaît le nouveau statut interne
+// ('pending' | 'completed' | 'failed'), le traitement est identique
+// quel que soit l'agrégateur.
+// ------------------------------------------------------------
+async function finalizeRegistrationStatus(
   supabaseAdmin: any,
+  reg: any,
   paymentRef: string,
-  statusData: any
+  newStatus: 'pending' | 'completed' | 'failed',
+  paymentMethodLabel: string
 ) {
-  const newStatus = mapPesapalStatus(statusData.status_code);
-
-  const { data: reg } = await supabaseAdmin
-    .from('registrations')
-    .select('*')
-    .eq('payment_ref', paymentRef)
-    .maybeSingle();
-
-  if (!reg) {
-    console.warn(`[STATUS] Aucune ligne Supabase trouvée pour payment_ref=${paymentRef} — mise à jour ignorée.`);
-    return null;
-  }
-
-  // Toujours garder trace des identifiants Pesapal, même si le statut
-  // global n'a pas encore changé (utile pour le debug / support).
-  await supabaseAdmin
-    .from('registrations')
-    .update({
-      pesapal_order_tracking_id: statusData.order_tracking_id ?? reg.pesapal_order_tracking_id ?? null,
-      pesapal_confirmation_code: statusData.confirmation_code ?? reg.pesapal_confirmation_code ?? null,
-    })
-    .eq('payment_ref', paymentRef);
-
   if (reg.payment_status === newStatus) {
     console.log(`[STATUS] payment_status déjà à jour (${reg.payment_status}) pour ${paymentRef} — pas de ré-envoi.`);
     return { ...reg, payment_status: newStatus };
@@ -71,10 +55,79 @@ export async function applyTransactionStatus(
       amountUsd: reg.amount_usd || 0,
       organization: reg.organization,
       country: reg.country,
-      paymentMethod: 'Card',
+      paymentMethod: paymentMethodLabel,
       date: reg.created_at ? String(reg.created_at).slice(0, 10) : null,
     });
   }
 
   return { ...reg, payment_status: newStatus };
+}
+
+// ============================================================
+// PESAPAL (carte bancaire) — inchangé dans son comportement.
+// ============================================================
+export async function applyTransactionStatus(
+  supabaseAdmin: any,
+  paymentRef: string,
+  statusData: any
+) {
+  const newStatus = mapPesapalStatus(statusData.status_code);
+
+  const { data: reg } = await supabaseAdmin
+    .from('registrations')
+    .select('*')
+    .eq('payment_ref', paymentRef)
+    .maybeSingle();
+
+  if (!reg) {
+    console.warn(`[STATUS] Aucune ligne Supabase trouvée pour payment_ref=${paymentRef} — mise à jour ignorée.`);
+    return null;
+  }
+
+  // Toujours garder trace des identifiants Pesapal, même si le statut
+  // global n'a pas encore changé (utile pour le debug / support).
+  await supabaseAdmin
+    .from('registrations')
+    .update({
+      pesapal_order_tracking_id: statusData.order_tracking_id ?? reg.pesapal_order_tracking_id ?? null,
+      pesapal_confirmation_code: statusData.confirmation_code ?? reg.pesapal_confirmation_code ?? null,
+    })
+    .eq('payment_ref', paymentRef);
+
+  return finalizeRegistrationStatus(supabaseAdmin, reg, paymentRef, newStatus, 'Card');
+}
+
+// ============================================================
+// PAWAPAY (mobile money) — même contrat, statut PawaPay en entrée.
+// `depositData` est l'objet dépôt lui-même (pas le wrapper FOUND/NOT_FOUND) :
+//   - depuis le polling `status` : c'est le champ `.data` de checkDepositStatus
+//   - depuis le callback push `pawapay-ipn` : c'est le corps de la requête
+// ============================================================
+export async function applyPawapayTransactionStatus(
+  supabaseAdmin: any,
+  paymentRef: string,
+  depositData: any
+) {
+  const newStatus = mapPawapayStatus(depositData?.status);
+
+  const { data: reg } = await supabaseAdmin
+    .from('registrations')
+    .select('*')
+    .eq('payment_ref', paymentRef)
+    .maybeSingle();
+
+  if (!reg) {
+    console.warn(`[STATUS] Aucune ligne Supabase trouvée pour payment_ref=${paymentRef} — mise à jour ignorée.`);
+    return null;
+  }
+
+  await supabaseAdmin
+    .from('registrations')
+    .update({
+      pawapay_provider_transaction_id:
+        depositData?.providerTransactionId ?? reg.pawapay_provider_transaction_id ?? null,
+    })
+    .eq('payment_ref', paymentRef);
+
+  return finalizeRegistrationStatus(supabaseAdmin, reg, paymentRef, newStatus, 'Mobile Money');
 }

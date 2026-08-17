@@ -2,7 +2,7 @@ import { useState, useEffect, useRef, FormEvent } from 'react';
 import { supabase } from '../lib/supabase';
 import {
   Loader, Mail, Building, Globe, CreditCard, User, MessageSquare, Send, Check,
-  X, HelpCircle, PhoneCall, /*Clock*/ CheckCircle2, XCircle, RefreshCw, ArrowLeft, ShieldCheck
+  X, HelpCircle, PhoneCall, CheckCircle2, XCircle, RefreshCw, ArrowLeft, ShieldCheck
 } from 'lucide-react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import SEO from '../components/SEO';
@@ -92,13 +92,23 @@ const ALL_COUNTRIES = COUNTRY_CODES
   .sort((a, b) => a.name.localeCompare(b.name));
 
 const PRICING: Record<string, { early: number; normal: number }> = {
-  'startup/SME/Individual': { early: 1, normal: 2 },
-  'corporate/investor/Organization': { early: 2, normal: 4 },
+  'startup/SME/Individual': { early: 50, normal: 100 },
+  'corporate/investor/Organization': { early: 150, normal: 300 },
 };
 const EARLY_BIRD_THRESHOLD = 100;
 const PESAPAL_ENDPOINT = "https://znyyfswvdtkixqznvlmr.supabase.co/functions/v1/pesapal-payment";
+const PAWAPAY_ENDPOINT = "https://znyyfswvdtkixqznvlmr.supabase.co/functions/v1/pawapay-payment";
 const PUBLIC_URL = "https://africastartupcongress.org";
 
+// Pays couverts par PawaPay (Mobile Money) — doit rester synchronisé avec
+// PAWAPAY_COUNTRIES dans functions/_shared/pawapay.ts. Si le pays choisi
+// n'est pas dans cette liste, seul le paiement carte (Pesapal) est proposé.
+const PAWAPAY_COUNTRIES = new Set([
+  'BJ', 'BF', 'CM', 'CI', 'CD', 'ET', 'GA', 'GH', 'KE', 'LS',
+  'MW', 'MZ', 'NG', 'CG', 'RW', 'SN', 'SL', 'TZ', 'UG', 'ZM',
+]);
+
+type PaymentProvider = 'pesapal' | 'pawapay';
 type PaymentStage = 'idle' | 'redirecting' | 'confirming' | 'success' | 'failed';
 
 type RegistrationSnapshot = {
@@ -114,6 +124,7 @@ type RegistrationSnapshot = {
   payment_ref: string;
   payment_status?: string;
   payment_method?: string;
+  payment_provider?: 'pesapal' | 'pawapay';
   amount_usd?: number | null;
   currency?: string;
 };
@@ -175,10 +186,12 @@ export default function Register() {
     role_detail: tagRole || '',
     field_of_activity: '',
     reason: '',
+    paymentMethod: 'card' as 'card' | 'momo',
   });
 
   const countryName = getCountryName(formData.countryCode);
   const selectedCategory = formData.role_detail ? getCategoryForRoleDetail(formData.role_detail) : null;
+  const isMomoAvailable = PAWAPAY_COUNTRIES.has(formData.countryCode);
 
   // ---- Estimation Early Bird (lecture seule, non-atomique — juste pour l'affichage) ----
   const [priceEstimate, setPriceEstimate] = useState<{ amount: number; isEarlyBird: boolean } | null>(null);
@@ -221,7 +234,12 @@ export default function Register() {
   };
 
   const handleCountryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setFormData(prev => ({ ...prev, countryCode: e.target.value }));
+    const countryCode = e.target.value;
+    setFormData(prev => ({
+      ...prev,
+      countryCode,
+      paymentMethod: PAWAPAY_COUNTRIES.has(countryCode) ? prev.paymentMethod : 'card',
+    }));
   };
 
   // ---- Étape 1 -> Étape 2 ----
@@ -241,6 +259,14 @@ export default function Register() {
   // ---- Étape 3 : paiement ----
   const [paymentStage, setPaymentStage] = useState<PaymentStage>(returningRef ? 'confirming' : 'idle');
   const [paymentRef, setPaymentRef] = useState<string>(returningRef || '');
+  // On ne connaît pas le provider utilisé si on revient d'une redirection
+  // externe (returningRef) sans l'avoir stocké — on retente Pesapal en
+  // premier par défaut, la valeur cachée reprend le dessus si trouvée.
+  const [paymentProvider, setPaymentProvider] = useState<PaymentProvider>(() => {
+    if (!returningRef) return 'pesapal';
+    const cached = getCachedReceipt(returningRef) as (RegistrationSnapshot & { payment_provider?: string }) | null;
+    return cached?.payment_provider === 'pawapay' ? 'pawapay' : 'pesapal';
+  });
   const [statusMessage, setStatusMessage] = useState('');
   const [paidAmountUsd, setPaidAmountUsd] = useState<number | null>(null);
   const [regSnapshot, setRegSnapshot] = useState<RegistrationSnapshot | null>(() =>
@@ -300,6 +326,10 @@ export default function Register() {
     const customerRef = `CONG-${Date.now()}`;
     setPaymentRef(customerRef);
 
+    const useMomo = formData.paymentMethod === 'momo' && isMomoAvailable;
+    const provider: PaymentProvider = useMomo ? 'pawapay' : 'pesapal';
+    setPaymentProvider(provider);
+
     const registrationData: RegistrationSnapshot = {
       full_name: formData.full_name,
       email: formData.email,
@@ -312,39 +342,42 @@ export default function Register() {
       reason: formData.reason,
       payment_ref: customerRef,
       payment_status: 'pending',
+      payment_method: useMomo ? 'momo' : 'cc',
+      payment_provider: provider,
       amount_usd: calculatedAmountUsd,
       currency: 'USD',
     };
 
     try {
-      // La ligne doit exister AVANT l'appel à pesapal-payment : la fonction
-      // fait un update() sur payment_ref pour synchroniser amount_usd/currency.
+      // La ligne doit exister AVANT l'appel à pesapal-payment / pawapay-payment :
+      // les deux fonctions font un update() sur payment_ref pour synchroniser
+      // les données de suivi (tracking id Pesapal, deposit id PawaPay...).
       const { error: insertError } = await supabase.from('registrations').insert([registrationData]);
       if (insertError) throw insertError;
 
-      // Copie locale en cas de retour de redirection depuis Pesapal.
+      // Copie locale en cas de retour de redirection depuis le provider.
       saveReceipt(registrationData);
 
+      const endpoint = useMomo ? PAWAPAY_ENDPOINT : PESAPAL_ENDPOINT;
       const paymentPayload = {
         action: 'initiate_payment',
         customerRef,
         email: formData.email,
         cname: formData.full_name,
         amount_usd: calculatedAmountUsd,
-        phone: formData.phone,
+        // PawaPay attend un numéro sans le préfixe '+' (ex: 250783456789).
+        phone: useMomo ? formData.phone.replace(/^\+/, '') : formData.phone,
         countryCode: formData.countryCode,
       };
 
-      const paymentResponse = await fetch(PESAPAL_ENDPOINT, {
+      const paymentResponse = await fetch(endpoint, {
         method: "POST",
-        headers: { "Content-Type": "application/json",
-          //Ajout de la clé supabase:
-          "Authorization": `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_DEFAULT_KEY}` },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(paymentPayload),
       });
 
       const paymentData = await paymentResponse.json();
-      console.log("Pesapal Response via Supabase:", paymentData);
+      console.log(`${provider} Response via Supabase:`, paymentData);
 
       if (paymentData.success !== 1 || !paymentData.url) {
         throw new Error(paymentData.reply || t('register.form.errorMessage'));
@@ -368,13 +401,14 @@ export default function Register() {
 
     const checkStatus = async () => {
       try {
-        const response = await fetch(PESAPAL_ENDPOINT, {
+        const endpoint = paymentProvider === 'pawapay' ? PAWAPAY_ENDPOINT : PESAPAL_ENDPOINT;
+        const response = await fetch(endpoint, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ action: 'status', paymentRef: paymentRef }),
         });
         const jsonResponse = await response.json() as PaymentStatusResponse;
-        console.log("Statut récupéré (source Pesapal):", jsonResponse);
+        console.log(`Statut récupéré (source ${paymentProvider}):`, jsonResponse);
 
         const paymentStatus = jsonResponse.status;
 
@@ -405,7 +439,7 @@ export default function Register() {
       if (intervalRef.current) { clearInterval(intervalRef.current); intervalRef.current = null; }
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [step, paymentRef]);
+  }, [step, paymentRef, paymentProvider]);
 
   const resetToStart = () => {
     setStep(1);
@@ -415,7 +449,7 @@ export default function Register() {
     setIsSubmitting(false);
     setFormData({
       full_name: '', email: '', phone: '', organization: '', countryCode: 'RW',
-      role_detail: '', field_of_activity: '', reason: '',
+      role_detail: '', field_of_activity: '', reason: '', paymentMethod: 'card',
     });
     navigate('/register');
   };
@@ -608,13 +642,44 @@ export default function Register() {
                   </p>
                 </div>
 
+                {isMomoAvailable ? (
+                  <div className="space-y-3">
+                    <label className="text-sm font-black text-[#001F54] uppercase tracking-widest flex items-center gap-2">
+                      <CreditCard size={16} /> Payment method *
+                    </label>
+
+                    <label className={`block w-full p-5 rounded-2xl border-2 cursor-pointer transition-all ${formData.paymentMethod === 'card' ? 'border-[#FDB913] bg-yellow-50' : 'border-gray-200 bg-gray-50'}`}>
+                      <div className="flex items-center justify-between">
+                        <span className="flex items-center gap-3 font-black text-[#001F54]">
+                          <CreditCard size={20} /> Card
+                        </span>
+                        <input type="radio" name="paymentMethod" value="card" checked={formData.paymentMethod === 'card'}
+                          onChange={() => setFormData(prev => ({ ...prev, paymentMethod: 'card' }))} className="w-5 h-5" />
+                      </div>
+                      <p className="text-sm text-gray-500 font-semibold mt-1 ml-8">Secure checkout via Pesapal, with 3-D Secure.</p>
+                    </label>
+
+                    <label className={`block w-full p-5 rounded-2xl border-2 cursor-pointer transition-all ${formData.paymentMethod === 'momo' ? 'border-[#FDB913] bg-yellow-50' : 'border-gray-200 bg-gray-50'}`}>
+                      <div className="flex items-center justify-between">
+                        <span className="flex items-center gap-3 font-black text-[#001F54]">
+                          <PhoneCall size={20} /> Mobile Money
+                        </span>
+                        <input type="radio" name="paymentMethod" value="momo" checked={formData.paymentMethod === 'momo'}
+                          onChange={() => setFormData(prev => ({ ...prev, paymentMethod: 'momo' }))} className="w-5 h-5" />
+                      </div>
+                      <p className="text-sm text-gray-500 font-semibold mt-1 ml-8">Pay from your MTN, Airtel or other mobile wallet via PawaPay.</p>
+                    </label>
+                  </div>
+                ) : null}
+
                 <div className="bg-blue-50 border-2 border-blue-200 rounded-2xl p-5 space-y-2">
                   <p className="font-black text-[#001F54] text-sm uppercase flex items-center gap-2">
                     <ShieldCheck size={16} /> Secure checkout
                   </p>
                   <p className="text-sm text-[#001F54] font-semibold">
-                    You'll be redirected to a secure Pesapal payment page to complete your registration — card or
-                    mobile money options are shown automatically based on your country.
+                    {formData.paymentMethod === 'momo'
+                      ? "You'll be redirected to a secure PawaPay payment page — enter your mobile money PIN there to confirm."
+                      : "You'll be redirected to a secure Pesapal payment page to complete your registration by card."}
                   </p>
                   <ul className="text-sm text-[#001F54] font-semibold space-y-1 list-disc list-inside">
                     <li>Do not close or refresh the payment page — it cancels the transaction.</li>
@@ -650,7 +715,9 @@ export default function Register() {
                       <Loader size={40} />
                     </div>
                     <h2 className="text-3xl font-black text-[#001F54] uppercase tracking-tight">Redirecting to secure checkout</h2>
-                    <p className="text-gray-600 font-bold">You're being sent to Pesapal to complete your payment.</p>
+                    <p className="text-gray-600 font-bold">
+                      You're being sent to {paymentProvider === 'pawapay' ? 'PawaPay' : 'Pesapal'} to complete your payment.
+                    </p>
                   </>
                 )}
 
@@ -660,7 +727,9 @@ export default function Register() {
                       <Loader size={40} />
                     </div>
                     <h2 className="text-3xl font-black text-[#001F54] uppercase tracking-tight">Confirming your payment</h2>
-                    <p className="text-gray-600 font-bold">We're checking with Pesapal that your payment went through. This can take a few seconds.</p>
+                    <p className="text-gray-600 font-bold">
+                      We're checking with {paymentProvider === 'pawapay' ? 'PawaPay' : 'Pesapal'} that your payment went through. This can take a few seconds.
+                    </p>
                     <p className="text-sm text-gray-400 font-mono">Reference {paymentRef}</p>
                   </>
                 )}
@@ -681,7 +750,11 @@ export default function Register() {
                       <div className="flex justify-between"><span>Role</span><span className="font-black text-[#001F54]">{regSnapshot?.role_detail ?? getRoleLabel(formData.role_detail)}</span></div>
                       <div className="flex justify-between"><span>Fee category</span><span className="font-black text-[#001F54]">{ROLE_GROUPS.find(g => g.category === (regSnapshot?.role ?? selectedCategory))?.groupLabel ?? ''}</span></div>
                       <div className="flex justify-between"><span>Amount paid</span><span className="font-black text-[#001F54]">USD {regSnapshot?.amount_usd ?? paidAmountUsd ?? displayAmount}</span></div>
-                      <div className="flex justify-between"><span>Method</span><span className="font-black text-[#001F54]">Secure checkout · Pesapal</span></div>
+                      <div className="flex justify-between"><span>Method</span><span className="font-black text-[#001F54]">
+                        {(regSnapshot?.payment_provider ?? paymentProvider) === 'pawapay'
+                          ? `Mobile Money · PawaPay${regSnapshot?.phone ? ` · ${regSnapshot.phone}` : ''}`
+                          : 'Card · Pesapal'}
+                      </span></div>
                       <div className="flex justify-between"><span>Reference</span><span className="font-black text-[#001F54]">{paymentRef}</span></div>
                     </div>
                     <button onClick={resetToStart}

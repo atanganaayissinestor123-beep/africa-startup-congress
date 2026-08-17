@@ -19,6 +19,8 @@ import {
   CheckSquare,
   Square,
   Target,
+  Wifi,
+  WifiOff,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import NewsLetter from "./NewsLetter";
@@ -39,6 +41,7 @@ export default function Admin() {
   const [isDeleting, setIsDeleting] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedRole, setSelectedRole] = useState("All Roles");
+  const [isRealtimeConnected, setIsRealtimeConnected] = useState(false);
   const navigation = useNavigate();
 
   const rolesList = [
@@ -58,6 +61,47 @@ export default function Admin() {
   useEffect(() => {
     checkAuth();
   }, []);
+
+  // ============================================================
+  // Realtime : les statuts de paiement (Pesapal IPN, cron cleanup)
+  // sont mis à jour côté serveur avec la clé service-role, donc ce
+  // client ne les voit jamais tant qu'il ne refait pas un SELECT.
+  // On s'abonne aux changements Postgres pour rafraîchir le tableau
+  // automatiquement, sans avoir à cliquer sur "Sync".
+  // ============================================================
+  useEffect(() => {
+    if (!isAuthenticated) return;
+
+    const channel = supabase
+      .channel("registrations-realtime")
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "registrations" },
+        (payload) => {
+          if (payload.eventType === "INSERT") {
+            const newRow = payload.new as Registration;
+            setRegistrations((prev) =>
+              prev.some((r) => r.id === newRow.id) ? prev : [newRow, ...prev]
+            );
+          } else if (payload.eventType === "UPDATE") {
+            const updatedRow = payload.new as Registration;
+            setRegistrations((prev) =>
+              prev.map((r) => (r.id === updatedRow.id ? updatedRow : r))
+            );
+          } else if (payload.eventType === "DELETE") {
+            const deletedId = (payload.old as Registration).id;
+            setRegistrations((prev) => prev.filter((r) => r.id !== deletedId));
+          }
+        }
+      )
+      .subscribe((status) => {
+        setIsRealtimeConnected(status === "SUBSCRIBED");
+      });
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [isAuthenticated]);
 
   const checkAuth = async () => {
     const {
@@ -402,8 +446,24 @@ export default function Admin() {
                 <div className="bg-blue-50 p-4 rounded-2xl">
                   <Users className="text-[#001F54]" size={32} />
                 </div>
-                <span className="bg-green-50 text-green-600 px-3 py-1 rounded-full text-xs font-black uppercase">
-                  Active
+                <span
+                  className={`flex items-center gap-1 px-3 py-1 rounded-full text-xs font-black uppercase ${
+                    isRealtimeConnected
+                      ? "bg-green-50 text-green-600"
+                      : "bg-gray-100 text-gray-400"
+                  }`}
+                  title={
+                    isRealtimeConnected
+                      ? "Live updates connected"
+                      : "Live updates unavailable — use Sync"
+                  }
+                >
+                  {isRealtimeConnected ? (
+                    <Wifi size={12} />
+                  ) : (
+                    <WifiOff size={12} />
+                  )}
+                  {isRealtimeConnected ? "Live" : "Offline"}
                 </span>
               </div>
               <h2 className="text-sm font-black text-gray-400 uppercase tracking-widest mb-1">
@@ -437,7 +497,11 @@ export default function Admin() {
                   onClick={fetchRegistrations}
                   className="flex-grow flex items-center justify-center gap-2 bg-[#001F54] text-white py-4 rounded-2xl font-black uppercase text-xs tracking-widest hover:scale-105 transition-all shadow-md active:scale-95"
                 >
-                  <RefreshCw size={16} /> Sync
+                  <RefreshCw
+                    size={16}
+                    className={isLoadingData ? "animate-spin" : ""}
+                  />{" "}
+                  Sync
                 </button>
                 <button
                   onClick={() =>
